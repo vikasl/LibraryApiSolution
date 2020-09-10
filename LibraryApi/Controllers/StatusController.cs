@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LibraryApi.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,16 @@ namespace LibraryApi.Controllers
 {
     public class StatusController : ControllerBase
     {
+
+        ISystemTime Clock;
+        IConfiguration Config;
+
+        public StatusController(ISystemTime clock, IConfiguration config )
+        {
+            Clock = clock;
+            Config = config;
+
+        }
 
         [HttpPost("employees")]
         public ActionResult Hire([FromBody] EmployeeCreateRequest employeeToHire)
@@ -50,8 +62,9 @@ namespace LibraryApi.Controllers
         // GET /employees/938938
         [HttpGet("employees/{employeeId:int}", Name = "employees#getanemployee")]
         public ActionResult GetAnEmployee(int employeeId)
-        {
+        { 
             // go to the database and get the thing...
+            // go add some stuff
             var response = new EmployeeResponse
             {
                 Id = employeeId,
@@ -68,11 +81,13 @@ namespace LibraryApi.Controllers
         [HttpGet("/status")]
         public ActionResult GetStatus()
         {
+
+            // some stuff.
             var status = new StatusResponse
             {
                 Message = "Looks good on my end. Party On!",
                 CheckedBy = "Joe Schmidt",
-                WhenChecked = DateTime.Now
+                WhenChecked = Clock.GetCurrent()
             };
 
             return Ok(status);
