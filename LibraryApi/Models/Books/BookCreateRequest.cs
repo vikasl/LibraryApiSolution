@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace LibraryApi.Models.Books
 {
-    public class GetBookDetailsResponse
+    public class BookCreateRequest
     {
-        public int Id { get; set; }
-        [Required][MaxLength(200)]
+        [Required]
+        [MaxLength(200)]
         public string Title { get; set; }
         public string Author { get; set; }
+        [Required]
         public string Genre { get; set; }
     }
 }

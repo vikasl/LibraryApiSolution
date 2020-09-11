@@ -22,6 +22,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpPost("employees")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public ActionResult Hire([FromBody] EmployeeCreateRequest employeeToHire)
         {
             // 1. Validate it. (we'll do this tomorrow)

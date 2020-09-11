@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using LibraryApi.Domain;
@@ -47,6 +49,27 @@ namespace LibraryApi
             IMapper mappper = mappingConfig.CreateMapper();
             services.AddSingleton<IMapper>(mappper);
             services.AddSingleton<MapperConfiguration>(mappingConfig);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Title = "Library API",
+                    Version = "1.0",
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                    {
+                        Name = "Vikas Loomba",
+                        Email = "vik@aol.com"
+
+                    },
+                    Description = "Test API"
+
+                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,13 +81,19 @@ namespace LibraryApi
             }
 
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseSwagger();
+            app.UseSwaggerUI(c=>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library API");
+                c.RoutePrefix = "";
+            });
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            
         }
     }
 }
